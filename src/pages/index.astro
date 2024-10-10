@@ -10,13 +10,22 @@ const data = (await response.json()) as PokemonListResponse;
 	<h1 class="text-3xl py-3">Listado de Pokemons</h1>
 		<section aria-label="Listado de Pokemons" class="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-5">
 			{
-				data.results.map((pokemon, index) => {
-					let id = index + 1;
+				data.results.map(({name,url}) => {
+					const id = url.split('/').at(-2);
 					let pokemonSprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 					return (
-						<PokemonCard pokeId={id} name={pokemon.name} url={pokemon.url} image={pokemonSprite} />
+						<a href=`/pokemons/${name}`>
+							<PokemonCard pokeId={id} name={name} url={url} image={pokemonSprite} />
+						</a>
 					)
 				}
 			)}
+		</section>
+		<section class="flex mt-10 justify-between items-center border-t pt-4 border-slate-600">
+			<div class="flex gap-x-4">
+				<a class:list={['btn']} href="/pokemons/2">Siguientes</a>
+				<a class:list={['btn disabled']} href="/pokemons/2">Siguientes</a>
+			</div>
+			<span class="text-xl font-bold text-slate-400">Página Actual: 1</span>
 		</section>
 </MainLayout>
