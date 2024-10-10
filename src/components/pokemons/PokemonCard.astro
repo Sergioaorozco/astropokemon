@@ -3,16 +3,17 @@ interface Props {
   name: string;
   image: string;
   url: string;
-  pokeId: number;
+  pokeId: number | string | undefined;
+  isBig? : boolean;
+  currentPage?: number;
 }
 
 import { Image } from 'astro:assets';
 
-const {name, image, url, pokeId} = Astro.props;
+const {name, image, url, pokeId, isBig = false} = Astro.props;
 ---
-<a href=`pokemons/${pokeId}`>
   <section class="mt-5 flex flex-col justify-center items-center group">
-    <Image  transition:name=`pokemon-${name}-${pokeId}` width={150} height={150} loading={"eager"} class="brightness-75 group-hover:brightness-110 group-hover:scale-105 duration-300 transition-all" src={image} alt=`Representation of ${name} Pokemon` />
-    <h2  class="py-3 capitalize group-hover:text-yellow-200 duration-300 transition-all">{name}</h2>
+    <Image  transition:name=`pokemon-${name}-${pokeId}` width={isBig ? 500 :150} height={isBig ? 500 :150} loading={"eager"} class:list={["group-hover:brightness-110 group-hover:scale-105 duration-300 transition-all", isBig && "brightness-100"]} src={image} alt={`Representation of ${name} Pokemon`} />
+    { !isBig && <h2 class="py-3 capitalize group-hover:text-yellow-200 duration-300 transition-all">{name}</h2>}
   </section>
 </a>
