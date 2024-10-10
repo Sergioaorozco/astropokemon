@@ -1,33 +1,32 @@
 ---
-import type { GetStaticPaths } from "astro";
-import type { PokemonListResponse } from "../../interfaces/pokemon-list-response";
-import type { PokemonDetail } from "../../interfaces/pokemon-detail-response";
+import { preview, type GetStaticPaths } from "astro";
+import type { PokemonListResponse } from "@interfaces/pokemon-list-response";
+import type { PokemonDetail } from "@interfaces/pokemon-detail-response";
 
-import MainLayout from '../../layouts/MainLayout.astro';
-import PokemonCard from "../../components/pokemons/PokemonCard.astro";
+import MainLayout from '@layouts/MainLayout.astro';
+import PokemonCard from "@components/pokemons/PokemonCard.astro";
 
 export const getStaticPaths = (async() => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
   const { results } = await resp.json() as PokemonListResponse;
 
-  const options = results.map(({name, url}) => {
-    let id = url.split('/').at(-2)
+  const options = results.map(({name,url}) => {
+    const id = url.split('/').at(-2)
     return {
-      params: { name },
+      params: {name},
       props: {id, name, url},
     }
   })
 
-  return options
+  return options;
 
 }) satisfies GetStaticPaths;
 
-const {url, name, id} = Astro.props;
+const {url, name,id} = Astro.props;
 const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
 const resp = await fetch(url);
 const DetailPokemon = await resp.json() as PokemonDetail;
-
 const { weight, cries, height, types  } = DetailPokemon;
 
 ---
@@ -35,7 +34,7 @@ const { weight, cries, height, types  } = DetailPokemon;
 <MainLayout title=`Pokemon - #${id} | ${name}` description=`Información de Pokemon - ${name}` image={image}>
   <div class="py-3 flex justify-between items-center">
     <h2 class="text-5xl capitalize font-bold">{name}</h2>
-    <a class="bg-slate-900 hover:bg-slate-600 transition-colors duration-300 rounded-lg px-4 py-2" href="/">Volver</a>
+    <a class="bg-slate-900 hover:bg-slate-600 transition-colors duration-300 rounded-lg px-4 py-2" href=`javascript:history.back()`>Volver</a>
   </div>
   <div class="flex flex-col justify-center items-center bg-gradient-to-b from-slate-900 to-transparent rounded-xl">
     <PokemonCard name={name} image={image} url={url} pokeId={id} isBig={true} />
