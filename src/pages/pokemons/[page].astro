@@ -41,13 +41,3 @@ const { page } = Astro.props;
 			<span class="text-xl font-bold text-slate-400">Página Actual: {page.currentPage}</span>
 		</section>
 </MainLayout>
-
-<style is:global>
-	.btn {
-		@apply bg-slate-900 hover:bg-blue-600 font-bold transition-colors duration-300 rounded-lg px-4 py-2;
-	}
-
-	.disabled {
-		@apply bg-slate-800 border text-slate-400 border-slate-600 hover:bg-slate-800 cursor-pointer;
-	}
-</style>

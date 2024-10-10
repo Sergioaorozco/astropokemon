@@ -33,3 +33,14 @@ const {title = siteInfo.title, description = siteInfo.description, image, author
 		<slot></slot>
 	</body>
 </html>
+
+
+<style is:global>
+	.btn {
+		@apply bg-slate-900 hover:bg-blue-600 font-bold transition-colors duration-300 rounded-lg px-4 py-2;
+	}
+
+	.disabled {
+		@apply bg-slate-800 border text-slate-400 border-slate-600 hover:bg-slate-800 cursor-pointer;
+	}
+</style>
