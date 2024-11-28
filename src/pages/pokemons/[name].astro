@@ -39,8 +39,8 @@ const { weight, cries, height, types  } = DetailPokemon;
   </div>
   <div class="flex flex-col justify-center items-center bg-gradient-to-b from-slate-900 to-transparent rounded-xl relative">
     <button id="favoriteBtn" class="absolute top-2 right-2" data-name={name} data-id={id}>
-      <Icon name="heart-outlined" class="text-red-500" size={30} />
-      <Icon name="heart-full" class="text-red-500 hidden" size={30} />
+      <Icon data-outline name="heart-outlined" class="text-red-500" size={30} />
+      <Icon data-full name="heart-full" class="text-red-500 hidden" size={30} />
     </button>
     <PokemonCard name={name} image={image} url={url} pokeId={id} isBig={true} />
     <div class="w-full justify-center flex gap-x-9 py-9 text-center">
@@ -60,11 +60,34 @@ const { weight, cries, height, types  } = DetailPokemon;
   }
 
   const handlePageLoad = () => {
+    let favoritePokemons: FavoritePokemon[] = JSON.parse(localStorage.getItem('favorites') ?? '[]');
+
     const favoriteInfo = document.querySelector('#favoriteBtn') as HTMLButtonElement;
-    const name = favoriteInfo?.dataset.name;
-    const id = favoriteInfo?.dataset.id;
-    favoriteInfo?.addEventListener('click', () => {
-      console.log({name, id});
+    const name = favoriteInfo?.dataset.name ?? '';
+    const id = favoriteInfo?.dataset.id ?? '';
+    const heartOutline = document.querySelector('[data-outline]') as HTMLElement;
+    const heartFull = document.querySelector('[data-full]') as HTMLElement;
+    const isFavorite = favoritePokemons.some((fav) => fav.name === name);
+    heartFull.classList.toggle('hidden', !isFavorite);
+    heartOutline.classList.toggle('hidden', isFavorite);
+
+    const toggleFavorite = () => {
+      if(isFavorite) {
+        favoritePokemons = favoritePokemons.filter((fav) => fav.name !== name);
+      } else {
+        favoritePokemons.push({
+          name: name,
+          id: +id
+        });
+      }
+      localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
+    }
+    
+
+    favoriteInfo.addEventListener('click', () => {
+      heartOutline.classList.toggle('hidden');
+      heartFull.classList.toggle('hidden');
+      toggleFavorite();
     })
   }
 
