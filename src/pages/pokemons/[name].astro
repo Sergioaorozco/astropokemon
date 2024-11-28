@@ -6,6 +6,7 @@ import { Icon } from "astro-icon/components";
 
 import MainLayout from '@layouts/MainLayout.astro';
 import PokemonCard from "@components/pokemons/PokemonCard.astro";
+import { imageConfig } from "astro:assets";
 
 export const getStaticPaths = (async() => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -54,24 +55,23 @@ const { weight, cries, height, types  } = DetailPokemon;
 
 
 <script>
-  interface FavoritePokemon {
-    name: string;
-    id: number;
-  }
+  import type { FavoritePokemon } from "@interfaces/favorite-pokemon";
 
   const handlePageLoad = () => {
     let favoritePokemons: FavoritePokemon[] = JSON.parse(localStorage.getItem('favorites') ?? '[]');
 
     const favoriteInfo = document.querySelector('#favoriteBtn') as HTMLButtonElement;
-    const name = favoriteInfo?.dataset.name ?? '';
-    const id = favoriteInfo?.dataset.id ?? '';
     const heartOutline = document.querySelector('[data-outline]') as HTMLElement;
     const heartFull = document.querySelector('[data-full]') as HTMLElement;
+    const name = favoriteInfo?.dataset.name ?? '';
+    const id = favoriteInfo?.dataset.id ?? '';
     const isFavorite = favoritePokemons.some((fav) => fav.name === name);
-    heartFull.classList.toggle('hidden', !isFavorite);
-    heartOutline.classList.toggle('hidden', isFavorite);
 
+    heartOutline.classList.toggle('hidden', isFavorite);
+    heartFull.classList.toggle('hidden', !isFavorite);
+    
     const toggleFavorite = () => {
+      const isFavorite = favoritePokemons.some((fav) => fav.name === name);
       if(isFavorite) {
         favoritePokemons = favoritePokemons.filter((fav) => fav.name !== name);
       } else {
